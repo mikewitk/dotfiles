@@ -9,7 +9,6 @@ return {
 	config = function()
 		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
 		local keymap = vim.keymap
 
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -82,7 +81,6 @@ return {
 		})
 
 		local servers = {
-			"ts_ls",
 			"html",
 			"cssls",
 			"tailwindcss",
@@ -99,10 +97,14 @@ return {
 			})
 		end
 
-		-- Special setup for TypeScript (tsserver)
+		-- Special setup for TypeScript (disable diagnostics)
 		lspconfig["ts_ls"].setup({
 			capabilities = capabilities,
 			filetypes = { "typescriptreact", "javascriptreact", "typescript", "javascript" },
+			on_attach = function(client)
+				-- Only disable diagnostics (keep other tsserver features like go-to-definition)
+				client.handlers["textDocument/publishDiagnostics"] = function() end
+			end,
 		})
 
 		-- Special setup for Lua
