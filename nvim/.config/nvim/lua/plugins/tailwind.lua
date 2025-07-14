@@ -60,7 +60,10 @@ return {
       vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = {"*.html", "*.jsx", "*.tsx", "*.js", "*.ts", "*.vue", "*.svelte"},
         callback = function()
-          vim.cmd("TailwindSort")
+          -- Only run TailwindSort if the command exists
+          if vim.fn.exists(":TailwindSort") > 0 then
+            pcall(vim.cmd, "TailwindSort")
+          end
         end,
       })
     end,
